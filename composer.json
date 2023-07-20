@@ -1,0 +1,18 @@
+{
+    "name": "gandhist/ematerai",
+    "description": "Mekari eMaterai API Client for Laravel",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Gandhist\\Ematerai\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Gandhist",
+            "email": "gandhisaputra13@gmail.com"
+        }
+    ],
+    "require": {}
+}
