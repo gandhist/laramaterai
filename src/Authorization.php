@@ -46,10 +46,6 @@ class Authorization {
                 'The clientId/clientSecret is null, You need to set the clientSecret from Config. Please double-check Config and clientSecret key.'
             );
         }
-        // clear cache 
-        Cache::forget('materai_access_token');
-        Cache::forget('materai_refresh_token');
-
         $ch = curl_init();
         $body = json_encode([
             'client_id' => Config::$clientId,
@@ -70,10 +66,15 @@ class Authorization {
         curl_setopt_array($ch, $curl_options);
         $result = curl_exec($ch);
         $info = curl_getinfo($ch);
+        if($info['http_code'] == 400){
+            $res = json_decode($result);
+            throw new \Exception("Please double check your auth code : ". $res->error_description);
+        }
         if($result){
+            Cache::forget('materai_refresh_token');
             $result = json_decode($result, true);
             Cache::put('materai_access_token', $result['access_token'], $result['expires_in']);
-            Cache::put('materai_refresh_token',  $result['refresh_token']);
+            Cache::forever('materai_refresh_token',  $result['refresh_token']);
             Cache::put('materai_expires_in',  $result['expires_in']);
             return $result['access_token'];
         } else {
@@ -109,11 +110,10 @@ class Authorization {
         $result = curl_exec($ch);
         $info = curl_getinfo($ch);
         if($result){
-            Cache::forget('materai_access_token');
             Cache::forget('materai_refresh_token');
             $result = json_decode($result, true);
             Cache::put('materai_access_token', $result['access_token'], $result['expires_in']);
-            Cache::put('materai_refresh_token',  $result['refresh_token']);
+            Cache::forever('materai_refresh_token',  $result['refresh_token']);
             Cache::put('materai_expires_in',  $result['expires_in']);
             return $result['access_token'];
         } else {
