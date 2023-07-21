@@ -29,4 +29,12 @@ class Stamping extends RemoteApi{
         return $this->get('/version', []);
     }
 
+    /**
+     * Function to re-stamp document by document id
+     * @param string $dokumen_id
+     */
+    public function restamp(string $document_id){
+        return $this->post("/documents/$document_id/resend", []);
+    }
+
 }
