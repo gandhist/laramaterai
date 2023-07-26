@@ -28,24 +28,31 @@ Add `use Gandhist\Ematerai\Config;`, set configuration :
 For stamping a document, you have to convert your PDF to base64, you can use [Base64 Guru](https://base64.guru/converter/encode/pdf) to convert your document.
 Add `use Gandhist\Ematerai\Stamping;`
 ```php
-$stamp =  new  Stamping;
-$base64 = "your_base_64_pdf_file";
-$filename = "your_file_name.pdf";
-$annotation = [[
-"page"  =>  4, // page you want to stamp
-"position_x"  =>  150, // set x axis
-"position_y"  =>  450, // set y axis
-"element_width"  =>  80,
-"element_height"  =>  80,
-"canvas_width"  =>  836,
-"canvas_height"  =>  1181,
-"type_of"  =>  "meterai"
-]];
-$stamping = $stamp->stamp($base64, $filename, $annotation, $callback);
+    $stamp = new Stamping;
+    $base64 = "your_base_64_pdf_file";
+    $filename = "your_file_name.pdf";
+    $callback = "https://webhook.site/e91fe71f-6672-4ae6-86b2-9018ba4df5a3?validation_key=ABCDE";
+    $annotation = [[
+        "page"  =>  4, // page you want to stamp
+        "position_x"  =>  150, // set x axis
+        "position_y"  =>  450, // set y axis
+        "element_width"  =>  80,
+        "element_height"  =>  80,
+        "canvas_width"  =>  836,
+        "canvas_height"  =>  1181,
+        "type_of"  =>  "meterai"
+    ]];
+    $stamping = $stamp->stamp($base64, $filename, $annotation, $callback);
 ```
 ### 2.3 Get detail document by document id
 Add `use Gandhist\Ematerai\Document;`
 ```php
 $doc = new Document;
 return $doc->detail("<document-id>");
+```
+### 2.4 Resend/Restamp document by document id
+Add `use Gandhist\Ematerai\Stamping;`
+```php
+$doc = new Stamping;
+return $doc->restamp("<document-id>");
 ```
