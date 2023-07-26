@@ -71,11 +71,11 @@ class Authorization {
             throw new \Exception("Please double check your auth code : ". $res->error_description);
         }
         if($result){
-            Cache::forget('materai_refresh_token');
             $result = json_decode($result, true);
-            Cache::put('materai_access_token', $result['access_token'], $result['expires_in']);
+            $expire_token = $result['expires_in'] / 60;
+            Cache::put('materai_access_token', $result['access_token'], $expire_token);
             Cache::forever('materai_refresh_token',  $result['refresh_token']);
-            Cache::put('materai_expires_in',  $result['expires_in']);
+            Cache::put('materai_expires_in',  $expire_token);
             return $result['access_token'];
         } else {
             throw new \Exception('CURL Error: ' . curl_error($ch), curl_errno($ch));
@@ -110,11 +110,11 @@ class Authorization {
         $result = curl_exec($ch);
         $info = curl_getinfo($ch);
         if($result){
-            Cache::forget('materai_refresh_token');
             $result = json_decode($result, true);
-            Cache::put('materai_access_token', $result['access_token'], $result['expires_in']);
+            $expire_token = $result['expires_in'] / 60;
+            Cache::put('materai_access_token', $result['access_token'], $expire_token);
             Cache::forever('materai_refresh_token',  $result['refresh_token']);
-            Cache::put('materai_expires_in',  $result['expires_in']);
+            Cache::put('materai_expires_in',  $expire_token);
             return $result['access_token'];
         } else {
             throw new \Exception('CURL Error: ' . curl_error($ch), curl_errno($ch));
