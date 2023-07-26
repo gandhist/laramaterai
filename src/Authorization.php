@@ -1,11 +1,13 @@
-<?php 
+<?php
 
 namespace Gandhist\Ematerai;
+
 use Exception;
 use Illuminate\Support\Facades\Cache;
 
 
-class Authorization {
+class Authorization
+{
 
     /**
      * checking if refresh token is null
@@ -15,12 +17,11 @@ class Authorization {
     public function __construct()
     {
         $refresh_token = Cache::get('materai_refresh_token');
-        if($refresh_token == null){
+        if ($refresh_token == null) {
             $this->getAuthToken();
-        }
-        else {
+        } else {
             $token = Cache::get('materai_access_token');
-            if($token == null){
+            if ($token == null) {
                 $this->refreshToken();
             }
         }
@@ -32,16 +33,17 @@ class Authorization {
      * store access token with expire time 3600 and store refresh token as well
      * @throw Exception
      */
-    public function getAuthToken(){
+    public function getAuthToken()
+    {
 
         // validation client id not defined
-        if(!Config::$clientId){
+        if (!Config::$clientId) {
             throw new Exception(
                 'The clientId/clientSecret is null, You need to set the clientId from Config. Please double-check Config and clientId key.'
             );
         }
         // validation if client secret is null
-        if(!Config::$clientSecret){
+        if (!Config::$clientSecret) {
             throw new Exception(
                 'The clientId/clientSecret is null, You need to set the clientSecret from Config. Please double-check Config and clientSecret key.'
             );
@@ -66,11 +68,11 @@ class Authorization {
         curl_setopt_array($ch, $curl_options);
         $result = curl_exec($ch);
         $info = curl_getinfo($ch);
-        if($info['http_code'] == 400){
+        if ($info['http_code'] == 400) {
             $res = json_decode($result);
-            throw new \Exception("Please double check your auth code : ". $res->error_description);
+            throw new \Exception("Please double check your auth code : " . $res->error_description);
         }
-        if($result){
+        if ($result) {
             $result = json_decode($result, true);
             $expire_token = $result['expires_in'] / 60;
             Cache::put('materai_access_token', $result['access_token'], $expire_token);
@@ -88,7 +90,8 @@ class Authorization {
      * and set new value to these key
      * return new access token
      */
-    public function refreshToken(){
+    public function refreshToken()
+    {
         $ch = curl_init();
         $body = json_encode([
             'client_id' => Config::$clientId,
@@ -109,7 +112,7 @@ class Authorization {
         curl_setopt_array($ch, $curl_options);
         $result = curl_exec($ch);
         $info = curl_getinfo($ch);
-        if($result){
+        if ($result) {
             $result = json_decode($result, true);
             $expire_token = $result['expires_in'] / 60;
             Cache::put('materai_access_token', $result['access_token'], $expire_token);
@@ -120,5 +123,4 @@ class Authorization {
             throw new \Exception('CURL Error: ' . curl_error($ch), curl_errno($ch));
         }
     }
-    
 }

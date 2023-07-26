@@ -5,7 +5,8 @@ namespace Gandhist\Ematerai;
 /**
  * E Materai configurations
  */
-class Config{
+class Config
+{
 
     /**
      * true for production
@@ -36,17 +37,18 @@ class Config{
     /**
      * get base url, depends on $isProduction
      */
-    public static function getBaseUrl(){
+    public static function getBaseUrl()
+    {
         return Config::$isProduction ?
-        Config::PRODUCTION_BASE_URL : Config::SANDBOX_BASE_URL;
+            Config::PRODUCTION_BASE_URL : Config::SANDBOX_BASE_URL;
     }
 
     /**
      * get SSO url, depends on $isProduction
      */
-    public static function getSSOBaseUrl(){
+    public static function getSSOBaseUrl()
+    {
         return Config::$isProduction ?
-        Config::PRODUCTION_SSO_BASE_URL : Config::SANDBOX_SSO_BASE_URL;
+            Config::PRODUCTION_SSO_BASE_URL : Config::SANDBOX_SSO_BASE_URL;
     }
-
 }

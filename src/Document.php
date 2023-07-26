@@ -2,14 +2,16 @@
 
 namespace Gandhist\Ematerai;
 
-class Document extends RemoteApi{
-    
+class Document extends RemoteApi
+{
+
     /**
      * get detail of document by document id
      * @param string @document_id
      * @return string response API
      */
-    public function detail(string $document_id){
+    public function detail(string $document_id)
+    {
         return $this->get("/documents/$document_id", []);
     }
 
@@ -18,8 +20,8 @@ class Document extends RemoteApi{
      * @param string @document_id
      * @return void response PDF
      */
-    public function download(string $document_id){
+    public function download(string $document_id)
+    {
         return $this->get("/documents/$document_id/download", []);
     }
-
 }

@@ -37,10 +37,6 @@ class RemoteApi extends Authorization
     public function remoteCall(string $url, array $data_hash, string $method){
         $token = Cache::get('materai_access_token');
         $ch = curl_init();
-        $headers = [
-            'Content-Type: application/json',
-            'Accept: application/json',
-        ];
         $curl_options = array(
             CURLOPT_URL => Config::getBaseUrl().$url,
             CURLOPT_HTTPHEADER => array(
@@ -68,12 +64,6 @@ class RemoteApi extends Authorization
         curl_setopt_array($ch, $curl_options);
         $result = curl_exec($ch);
         $info = curl_getinfo($ch);
-        if($info){
-            // if unauthorized
-            if($info['http_code'] == 401){
-                $this->refreshToken();
-            }
-        }
         return $result;
     }
 
