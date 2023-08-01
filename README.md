@@ -4,7 +4,7 @@ This is the unofficial library for eMaterai API by Mekari, for official document
 
 ## 1. Installation
 Install using [Composer](http://composer.org/) CLI :
-`composer require gandhist/laramaterai`
+`composer require gandhist/ematerai`
 ## 2. How to use
 
 ### 2.1 General Setting
