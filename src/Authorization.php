@@ -74,10 +74,12 @@ class Authorization
         }
         if ($result) {
             $result = json_decode($result, true);
-            $expire_token = $result['expires_in'] / 60;
+            $expire_token = $result['expires_in'] / 60; // 1 hour
+            $expire_refresh_token = (60 * 24) * 14; // 24 hours * 14 days 
             Cache::put('materai_access_token', $result['access_token'], $expire_token);
-            Cache::forever('materai_refresh_token',  $result['refresh_token']);
-            Cache::put('materai_expires_in',  $expire_token);
+            Cache::put('materai_refresh_token', $result['refresh_token'], $expire_refresh_token);
+            Cache::put('materai_expires_in', $expire_token, $expire_token);
+            Cache::put('refresh_expires_in', $expire_refresh_token, $expire_refresh_token);
             return $result['access_token'];
         } else {
             throw new \Exception('CURL Error: ' . curl_error($ch), curl_errno($ch));
@@ -114,10 +116,15 @@ class Authorization
         $info = curl_getinfo($ch);
         if ($result) {
             $result = json_decode($result, true);
+            if(array_key_exists("error", $result)){
+                throw new \Exception($result['error_description']);
+            }
             $expire_token = $result['expires_in'] / 60;
+            $expire_refresh_token = (60 * 24) * 14; // 24 hours * 14 days 
             Cache::put('materai_access_token', $result['access_token'], $expire_token);
-            Cache::forever('materai_refresh_token',  $result['refresh_token']);
-            Cache::put('materai_expires_in',  $expire_token);
+            Cache::put('materai_refresh_token', $result['refresh_token'], $expire_refresh_token);
+            Cache::put('materai_expires_in', $expire_token, $expire_token);
+            Cache::put('refresh_expires_in', $expire_refresh_token, $expire_refresh_token);
             return $result['access_token'];
         } else {
             throw new \Exception('CURL Error: ' . curl_error($ch), curl_errno($ch));
